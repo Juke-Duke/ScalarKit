@@ -4,10 +4,15 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <PackageId>ScalarKit</PackageId>
+    <Version>1.0.0-beta</Version>
     <Authors>Youssef Elshabasy</Authors>
     <Description>ScalarKit provides a set of basic scalar types to use in your projects, as well as a way to make your own!</Description>
-    <!-- <RepositoryUrl> -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Juke-Duke/ScalarKit</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
