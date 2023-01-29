@@ -2,7 +2,7 @@
 
 # Getting Started
 
-## `IScalar<TScalar, TPrimitive>`
+## `IScalar<TSelf, TPrimitive>`
 ScalarKit offers a contract for types that are synonymous with a backing type, usually a primitive type. This is common to combat bad code smells, such as primitive obsession, while also making your code base more readable and maintainable.
 ```cs
 public interface IScalar<TSelf, TPrimitive>
