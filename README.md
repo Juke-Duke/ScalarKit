@@ -141,6 +141,20 @@ return proneAuthResponse.Dispatch(
     onError: errors => authResponse
 );
 ```
+You can clean your instance of `ErrorProne` to only contain unique errors with a given comparator, for `ErrorProne<TValue>`, if a comparator for `Exception` is not provided, a built in comaparator will be used that compares the type and message of the exception.
+```cs
+ErrorProne<bool> alwaysTrue = true;
+alwaysTrue
+    .Inspect(
+        constraint: _ => false,
+        error: new Exception("NOT TRUE!")
+    )
+    .Inspect(
+        constraint: _ => false,
+        error: new Exception("NOT TRUE!")
+    )
+    .OnlyUniqueErrors(); // only contains one exception
+```
 
 ### Accessing the value
 The value of an `ErrorProne` can be accessed through the `Value` property, however, this will throw an exception if the `ErrorProne` is faulty, so use the `IsFaulty` property to check beforehand, or configure any of the `Dispatch` methods to handle it.
@@ -158,4 +172,4 @@ Console.WriteLine(proneInteger.Value);
 Unhandled exception. ScalarKit.Exceptions.FaultyValueException: The error prone Int32 can not be accessed as it is faulty.
 ```
 
-> Error
+> `ErrorProne` is inspired from functional railway oriented programming, as well as Rust's approach to error handling.

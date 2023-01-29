@@ -24,14 +24,14 @@ public static class ErrorProne
         where TValue : notnull
         => new(proneValue.Errors.Concat(firstProne.Errors).Concat(prones.SelectMany(e => e.Errors)));
 
-    public static ErrorProne<TValue, TError> OnlyUniqueErrors<TValue, TError>(this ErrorProne<TValue, TError> proneValue)
+    public static ErrorProne<TValue, TError> OnlyUniqueErrors<TValue, TError>(this ErrorProne<TValue, TError> proneValue, IEqualityComparer<TError>? errorComparer = null)
         where TValue : notnull
         where TError : notnull
-        => new(proneValue.Errors.Distinct());
+        => new(proneValue.Errors.Distinct(errorComparer));
 
-    public static ErrorProne<TValue> OnlyUniqueErrors<TValue>(this ErrorProne<TValue> proneValue)
+    public static ErrorProne<TValue> OnlyUniqueErrors<TValue>(this ErrorProne<TValue> proneValue, IEqualityComparer<Exception>? exceptionComparer = null)
         where TValue : notnull
-        => new(proneValue.Errors.Distinct(new ExceptionEqualityComparer()));
+        => new(proneValue.Errors.Distinct(exceptionComparer ?? new ExceptionEqualityComparer()));
 
     public static bool AnyFaulty<TError>(params IErroneous<TError>[] prones)
         where TError : notnull
