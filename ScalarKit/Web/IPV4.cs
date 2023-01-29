@@ -17,6 +17,6 @@ public readonly record struct IPV4 : IScalar<IPV4, string>
             ? new IPV4(ipv4)
             : throw new InvalidIPV4Exception(ipv4);
 
-    public static implicit operator IP(IPV4 ipv4)
-        => ipv4.Value;
+    public override string ToString()
+        => Value;
 }

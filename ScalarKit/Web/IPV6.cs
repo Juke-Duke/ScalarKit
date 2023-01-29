@@ -18,6 +18,6 @@ public readonly record struct IPV6 : IScalar<IPV6, string>
             ? new IPV6(ipv6)
             : throw new InvalidIPV6Exception(ipv6);
 
-    public static implicit operator IP(IPV6 ipv6)
-        => ipv6.Value;
+    public override string ToString()
+        => Value;
 }

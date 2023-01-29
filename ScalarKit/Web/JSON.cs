@@ -15,4 +15,7 @@ public sealed record JSON : IScalar<JSON, string>
 
         return new JSON(json);
     }
+
+    public override string ToString()
+        => Value;
 }
