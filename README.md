@@ -2,6 +2,23 @@
 
 # Getting Started
 
+## `IScalar<TScalar, TPrimitive>`
+ScalarKit offers a contract for types that are synonymous with a backing type, usually a primitive type. This is common to combat bad code smells, such as primitive obsession, while also making your code base more readable and maintainable.
+```cs
+public interface IScalar<TSelf, TPrimitive>
+    where TSelf : notnull, IScalar<TSelf, TPrimitive>
+    where TPrimitive : notnull
+{
+    TPrimitive Value { get; }
+
+    static abstract implicit operator TSelf(TPrimitive primitive);
+
+    string? ToString()
+        => Value.ToString();
+}
+```
+The implicit operator is where we reccomend you to do any validation checks, and create a private constructor for your type. This allows you to create a type that is both immutable and safe to use, but of course use the library in any way you see fit.
+
 ## `ErrorProne`
 ScalarKit offers an alternative to error handling and the expensive throwing of exceptions, wrapping them in return objects called ErrorPrones.
 
@@ -35,8 +52,6 @@ ErrorProne<int> proneIntegerWithErrors = new(new[]
 });
 ```
 > **Note** The value or error type will be implicitly converted to the `ErrorProne` type, however, any `IEnumerable` of errors can only be passed in through the constructor. This is due to interfaces not being able to be implicitly convert to a type.
-
-> **Warning** `ErrorProne` lives in a null free world, meaning neither the value nor the errors can be nullable.
 
 ### Using an ErrorProne
 The method you will use often is `Inspect`, as this is how ErrorPrones build up their container of errors with a very fluent syntax.

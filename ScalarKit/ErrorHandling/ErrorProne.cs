@@ -2,7 +2,7 @@ using ScalarKit.Exceptions;
 
 namespace ScalarKit.ErrorHandling;
 
-public class ErrorProne<TValue, TError> : IErroneous<TError>
+public class ErrorProne<TValue, TError> : IErroneous<TError>, IScalar<ErrorProne<TValue, TError>, TValue>
     where TValue : notnull
     where TError : notnull
 {
@@ -112,7 +112,7 @@ public class ErrorProne<TValue, TError> : IErroneous<TError>
             : string.Join($",{Environment.NewLine}", _errors);
 }
 
-public sealed class ErrorProne<TValue> : ErrorProne<TValue, Exception>, IErroneous<Exception>
+public sealed class ErrorProne<TValue> : ErrorProne<TValue, Exception>, IErroneous<Exception>, IScalar<ErrorProne<TValue>, TValue>
     where TValue : notnull
 {
     private ErrorProne(TValue value)
