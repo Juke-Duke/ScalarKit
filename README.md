@@ -34,9 +34,9 @@ ErrorProne<int> proneIntegerWithErrors = new(new[]
     new ArgumentOutOfRangeException("Try a smaller number")
 });
 ```
-> Note: The value or error type will be implicitly converted to the `ErrorProne` type, however, any `IEnumerable` of errors can only be passed in through the constructor. This is due to interfaces not being able to be implicitly convert to a type.
+> Note The value or error type will be implicitly converted to the `ErrorProne` type, however, any `IEnumerable` of errors can only be passed in through the constructor. This is due to interfaces not being able to be implicitly convert to a type.
 
-> Imporant: `ErrorProne` lives in a null free world, meaning neither the value nor the errors can be nullable.
+> Imporant `ErrorProne` lives in a null free world, meaning neither the value nor the errors can be nullable.
 
 ### Using an ErrorProne
 The method you will use often is `Inspect`, as this is how ErrorPrones build up their container of errors with a very fluent syntax.
@@ -157,3 +157,5 @@ Console.WriteLine(proneInteger.Value);
 ```bash
 Unhandled exception. ScalarKit.Exceptions.FaultyValueException: The error prone Int32 can not be accessed as it is faulty.
 ```
+
+> Error
