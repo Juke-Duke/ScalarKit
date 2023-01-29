@@ -1,10 +1,9 @@
 using System.Text.RegularExpressions;
-using ScalarKit.ErrorHandling;
 using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
-public sealed record Username : IProneScalar<Username, string>
+public sealed record Username : IScalar<Username, string>
 {
     private static readonly Regex DEFAULT_VALID_CRITERIA = new(@"^(?=.{1,21}$)(?=.*[a-zA-Z])");
 
@@ -16,23 +15,13 @@ public sealed record Username : IProneScalar<Username, string>
     public string Value { get; }
 
     private Username(string username)
-        => Value = username;
+        : this(username, DEFAULT_VALID_CRITERIA, DEFAULT_VALID_CRITERIA_DETAILS) { }
+
+    public Username(string username, Regex citeria, string criteriaDetails)
+        => Value = citeria.IsMatch(username)
+            ? username
+            : throw new InvalidUsernameException(username, criteriaDetails);
 
     public static implicit operator Username(string username)
-    {
-        var inspectedUsername = Inspect(username);
-
-        if (inspectedUsername.IsFaulty)
-            inspectedUsername.ThrowFirstErrorIfFaulty();
-
-        return inspectedUsername.Value;
-    }
-
-    public static ErrorProne<Username> Inspect(string username)
-        => Inspect(username, DEFAULT_VALID_CRITERIA, DEFAULT_VALID_CRITERIA_DETAILS);
-
-    public static ErrorProne<Username> Inspect(string username, Regex citeria, string criteriaDetails)
-        => citeria.IsMatch(username)
-            ? new Username(username)
-            : new InvalidUsernameException(username, criteriaDetails);
+        => new(username);
 }

@@ -5,20 +5,29 @@ namespace ScalarKit.ErrorHandling;
 
 public static class ErrorProne
 {
-    public static ErrorProne<TValue, TError> AggregateErrors<TValue, TError>(this ErrorProne<TValue, TError> proneValue, IErroneous<TError> firstProne, params IErroneous<TError>[] prones)
-        where TValue : notnull
-        where TError : notnull
-        => new(proneValue.Errors.Concat(firstProne.Errors).Concat(prones.SelectMany(e => e.Errors)));
-
-    public static IEnumerable<TError> AccumulateErrors<TError>(IErroneous<TError> firstProne, params IErroneous<TError>[] prones)
-        where TError : notnull
-        => firstProne.Errors.Concat(prones.SelectMany(e => e.Errors));
-
     public static void ThrowFirstErrorIfFaulty(this IErroneous<Exception> prones)
     {
         if (prones.IsFaulty)
             throw prones.Errors.First();
     }
+
+    public static IEnumerable<TError> AccumulateErrors<TError>(IErroneous<TError> firstProne, params IErroneous<TError>[] prones)
+        where TError : notnull
+        => firstProne.Errors.Concat(prones.SelectMany(e => e.Errors));
+
+    public static ErrorProne<TValue, TError> AggregateErrors<TValue, TError>(this ErrorProne<TValue, TError> proneValue, IErroneous<TError> firstProne, params IErroneous<TError>[] prones)
+        where TValue : notnull
+        where TError : notnull
+    => new(proneValue.Errors.Concat(firstProne.Errors).Concat(prones.SelectMany(e => e.Errors)));
+
+    public static ErrorProne<TValue, TError> OnlyUniqueErrors<TValue, TError>(this ErrorProne<TValue, TError> proneValue)
+        where TValue : notnull
+        where TError : notnull
+        => new(proneValue.Errors.Distinct());
+
+    public static ErrorProne<TValue> OnlyUniqueErrors<TValue>(this ErrorProne<TValue> proneValue)
+        where TValue : notnull
+        => new(proneValue.Errors.Distinct(new ExceptionEqualityComparer()));
 
     public static bool AnyFaulty<TError>(params IErroneous<TError>[] prones)
         where TError : notnull

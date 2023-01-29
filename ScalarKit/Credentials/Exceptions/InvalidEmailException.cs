@@ -3,8 +3,8 @@ namespace ScalarKit.Exceptions;
 public sealed class InvalidEmailException : Exception
 {
     public InvalidEmailException()
-        : base("The provided email is invalid.") { }
+        : base("The email is invalid.") { }
 
     public InvalidEmailException(string email)
-        : base($"The provided email is invalid: {email}.") { }
+        : base($"The email is invalid: {email}.") { }
 }

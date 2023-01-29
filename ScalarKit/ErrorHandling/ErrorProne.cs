@@ -8,13 +8,13 @@ public class ErrorProne<TValue, TError> : IErroneous<TError>
 {
     protected readonly TValue _value = default!;
 
-    protected readonly HashSet<TError> _errors = new();
+    protected readonly List<TError> _errors = new();
 
     public TValue Value => IsFaulty
         ? throw new FaultyValueException(_value)
         : _value;
 
-    public IReadOnlySet<TError> Errors => _errors;
+    public IReadOnlyCollection<TError> Errors => _errors;
 
     public bool IsFaulty => _errors.Any() || _value is null;
 
@@ -51,7 +51,7 @@ public class ErrorProne<TValue, TError> : IErroneous<TError>
         return this;
     }
 
-    public void Dispatch(Action<TValue> onValue, Action<IReadOnlySet<TError>> onFaulty)
+    public void Dispatch(Action<TValue> onValue, Action<IReadOnlyCollection<TError>> onFaulty)
     {
         if (!IsFaulty)
             onValue(Value);
@@ -59,7 +59,7 @@ public class ErrorProne<TValue, TError> : IErroneous<TError>
             onFaulty(Errors);
     }
 
-    public TResult Dispatch<TResult>(Func<TValue, TResult> onValue, Func<IReadOnlySet<TError>, TResult> onFaulty)
+    public TResult Dispatch<TResult>(Func<TValue, TResult> onValue, Func<IReadOnlyCollection<TError>, TResult> onFaulty)
         => !IsFaulty
             ? onValue(Value)
             : onFaulty(Errors);

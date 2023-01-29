@@ -1,12 +1,11 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using ScalarKit.ErrorHandling;
 using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
-public sealed record Password : IProneScalar<Password, string>
+public sealed record Password : IScalar<Password, string>
 {
     /// <summary>
     /// The default regex to validate a <see cref="Password"/>.<br/>
@@ -17,8 +16,7 @@ public sealed record Password : IProneScalar<Password, string>
     /// - Must be at least 6 characters long.
     /// </summary>
     /// <value>The string containing the default regex to validate a <see cref="Password"/>.</value>
-    private static readonly Regex DEFAULT_VALID_CRITERIA
-        = new(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{6,}$");
+    private static readonly Regex DEFAULT_VALID_CRITERIA = new(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{6,}$");
 
     private const string DEFAULT_VALID_CRITERIA_DETAILS = """
         - Must contain at least one lowercase letter.
@@ -36,26 +34,18 @@ public sealed record Password : IProneScalar<Password, string>
         => Value = password;
 
     public static implicit operator Password(string password)
-    {
-        var inspectedPassword = Inspect(password);
+        => new(password);
 
-        inspectedPassword.ThrowFirstErrorIfFaulty();
+    public static Password Encrypt(Password password)
+        => Encrypt(password, DEFAULT_VALID_CRITERIA, DEFAULT_VALID_CRITERIA_DETAILS);
 
-        return inspectedPassword.Value;
-    }
-
-    public static ErrorProne<Password> Inspect(string password)
-        => Inspect(password, DEFAULT_VALID_CRITERIA, DEFAULT_VALID_CRITERIA_DETAILS);
-
-    public static ErrorProne<Password> Inspect(string password, Regex criteria, string criteriaDetails)
-        => criteria.IsMatch(password)
-            ? new Password(password)
-            : new InvalidPasswordException(criteriaDetails);
-
-    public static void Encrypt(Password password)
+    public static Password Encrypt(Password password, Regex criteria, string criteriaDetails)
     {
         if (password.IsEncrypted)
-            return;
+            return password;
+
+        if (!(criteria ?? DEFAULT_VALID_CRITERIA).IsMatch(password.Value))
+            throw new InvalidPasswordException(criteriaDetails ?? DEFAULT_VALID_CRITERIA_DETAILS);
 
         const int SALT_KEY = 64;
         const int ITERATIONS = 1024;
@@ -72,5 +62,7 @@ public sealed record Password : IProneScalar<Password, string>
 
         password.Value = Convert.ToHexString(hash);
         password.IsEncrypted = true;
+
+        return password;
     }
 }

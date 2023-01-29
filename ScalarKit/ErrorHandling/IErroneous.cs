@@ -5,5 +5,5 @@ public interface IErroneous<TError>
 {
     bool IsFaulty { get; }
 
-    IReadOnlySet<TError> Errors { get; }
+    IReadOnlyCollection<TError> Errors { get; }
 }

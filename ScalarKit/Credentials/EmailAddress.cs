@@ -4,7 +4,7 @@ using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
-public sealed record EmailAddress : IProneScalar<EmailAddress, string>
+public readonly record struct EmailAddress : IScalar<EmailAddress, string>
 {
     public string Username { get; }
 
@@ -21,22 +21,10 @@ public sealed record EmailAddress : IProneScalar<EmailAddress, string>
     }
 
     public static implicit operator EmailAddress(string emailAddress)
-    {
-        var inspectedEmail = Inspect(emailAddress);
-
-        inspectedEmail.ThrowFirstErrorIfFaulty();
-
-        return inspectedEmail.Value;
-    }
+        => MailAddress.TryCreate(emailAddress, out _)
+            ? new EmailAddress(emailAddress)
+            : throw new InvalidEmailException(emailAddress);
 
     public static implicit operator string(EmailAddress emailAddress)
         => emailAddress.Value;
-
-    public static ErrorProne<EmailAddress> Inspect(string emailAddress)
-    {
-        if (!MailAddress.TryCreate(emailAddress, out _))
-            return new InvalidEmailException(emailAddress);
-
-        return new EmailAddress(emailAddress);
-    }
 }

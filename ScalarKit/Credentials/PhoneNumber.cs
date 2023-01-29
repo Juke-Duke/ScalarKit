@@ -1,10 +1,9 @@
 using System.Text.RegularExpressions;
-using ScalarKit.ErrorHandling;
 using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
-public readonly record struct PhoneNumber : IProneScalar<PhoneNumber, string>, IFormattable
+public readonly record struct PhoneNumber : IScalar<PhoneNumber, string>, IFormattable
 {
     private static readonly Regex VALID_CRITERIA
         = new Regex(@"^(\+\d{1,3}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$");
@@ -29,25 +28,9 @@ public readonly record struct PhoneNumber : IProneScalar<PhoneNumber, string>, I
     }
 
     public static implicit operator PhoneNumber(string phoneNumber)
-    {
-        var inspectedPhoneNumber = Inspect(phoneNumber);
-
-        if (inspectedPhoneNumber.IsFaulty)
-            inspectedPhoneNumber.ThrowFirstErrorIfFaulty();
-
-
-        return inspectedPhoneNumber.Value;
-    }
-
-    public static ErrorProne<PhoneNumber> Inspect(string phoneNumber)
-    {
-        if (!VALID_CRITERIA.IsMatch(phoneNumber))
-            return new InvalidPhoneNumberException(phoneNumber);
-
-        var digits = phoneNumber.Where(x => char.IsDigit(x)).ToArray();
-
-        return new PhoneNumber(digits);
-    }
+        => VALID_CRITERIA.IsMatch(phoneNumber)
+            ? new PhoneNumber(phoneNumber.Where(x => char.IsDigit(x)).ToArray())
+            : throw new InvalidPhoneNumberException(phoneNumber);
 
     public override string ToString()
         => ToString("E164", null);
