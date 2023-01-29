@@ -20,6 +20,10 @@ public static class ErrorProne
         where TError : notnull
     => new(proneValue.Errors.Concat(firstProne.Errors).Concat(prones.SelectMany(e => e.Errors)));
 
+    public static ErrorProne<TValue> AggregateErrors<TValue>(this ErrorProne<TValue> proneValue, IErroneous<Exception> firstProne, params IErroneous<Exception>[] prones)
+        where TValue : notnull
+        => new(proneValue.Errors.Concat(firstProne.Errors).Concat(prones.SelectMany(e => e.Errors)));
+
     public static ErrorProne<TValue, TError> OnlyUniqueErrors<TValue, TError>(this ErrorProne<TValue, TError> proneValue)
         where TValue : notnull
         where TError : notnull
@@ -49,7 +53,7 @@ public static class ErrorProne
             error: onOneOf
         );
 
-    public static ErrorProne<TNumber, TError> MinValue<TNumber, TError>(this ErrorProne<TNumber, TError> proneNumber, TNumber min, TError onOutOfBounds, bool includeMin = false)
+    public static ErrorProne<TNumber, TError> GreaterThan<TNumber, TError>(this ErrorProne<TNumber, TError> proneNumber, TNumber min, TError onOutOfBounds, bool includeMin = false)
         where TNumber : INumber<TNumber>
         where TError : notnull
         => proneNumber.Inspect(
@@ -57,7 +61,7 @@ public static class ErrorProne
             error: onOutOfBounds
         );
 
-    public static ErrorProne<TNumber, TError> MaxValue<TNumber, TError>(this ErrorProne<TNumber, TError> proneNumber, TNumber max, TError onOutOfBounds, bool includeMax = false)
+    public static ErrorProne<TNumber, TError> LessThan<TNumber, TError>(this ErrorProne<TNumber, TError> proneNumber, TNumber max, TError onOutOfBounds, bool includeMax = false)
         where TNumber : INumber<TNumber>
         where TError : notnull
         => proneNumber.Inspect(
@@ -65,14 +69,14 @@ public static class ErrorProne
             error: onOutOfBounds
         );
 
-    public static ErrorProne<TNumber, TError> BoundValue<TNumber, TError>(this ErrorProne<TNumber, TError> proneNumber, TNumber min, TNumber max, TError onOutOfBounds, bool includeMin = false, bool includeMax = false)
+    public static ErrorProne<TNumber, TError> Between<TNumber, TError>(this ErrorProne<TNumber, TError> proneNumber, TNumber min, TNumber max, TError onOutOfBounds, bool includeMin = false, bool includeMax = false)
         where TNumber : INumber<TNumber>
         where TError : notnull
         => max < min
             ? throw new ArgumentException($"{nameof(max)} must be greater than {nameof(min)}")
             : proneNumber
-                .MinValue(min, onOutOfBounds, includeMin)
-                .MaxValue(max, onOutOfBounds, includeMax);
+                .GreaterThan(min, onOutOfBounds, includeMin)
+                .LessThan(max, onOutOfBounds, includeMax);
 
     public static ErrorProne<string, TError> NotEmpty<TError>(this ErrorProne<string, TError> proneValue, TError onEmpty)
         where TError : notnull
