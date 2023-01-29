@@ -1,4 +1,4 @@
-![ScalarKit](ScalarKit%20Logo.png)
+![ScalarKit](ScalarKitLogo.png)
 
 # Getting Started
 
