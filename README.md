@@ -17,7 +17,7 @@ public interface IScalar<TSelf, TPrimitive>
         => Value.ToString();
 }
 ```
-The implicit operator is where we reccomend you to do any validation checks, and create a private constructor for your type. This allows you to create a type that is both immutable and safe to use, but of course use the library in any way you see fit.
+The implicit operator is where it is recommended for you to do any validation checks, and call a private constructor for your type. This allows you to create a type that is both immutable and safe to use, but of course use the library in any way you see fit.
 
 ## `ErrorProne`
 ScalarKit offers an alternative to error handling and the expensive throwing of exceptions, wrapping them in return objects called ErrorPrones.
