@@ -14,7 +14,7 @@ public readonly record struct IP : IScalar<IP, string>
         try { return (IPV4)ip; }
             catch (Exception) { }
         try { return (IPV6)ip; }
-             catch (Exception) { }
+            catch (Exception) { }
 
         throw new InvalidIPException(ip);
     }

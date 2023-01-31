@@ -1,5 +1,4 @@
 using System.Net.Mail;
-using ScalarKit.ErrorHandling;
 using ScalarKit.Exceptions;
 
 namespace ScalarKit;

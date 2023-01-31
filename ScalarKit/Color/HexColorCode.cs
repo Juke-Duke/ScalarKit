@@ -5,66 +5,60 @@ namespace ScalarKit;
 
 public readonly record struct HexColorCode : IScalar<HexColorCode, string>
 {
-    private static readonly Regex VALID_HEX_CRITERIA = new Regex(@"#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3,4}|[A-Fa-f0-9]{8})$");
+    private static readonly Regex VALID_HEX_CRITERIA = new Regex(@"#([A-Fa-f0-9]{3,4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$");
 
-    public string RedHexComponent { get; }
+    public static string Format = "X";
 
-    public string GreenHexComponent { get; }
+    public byte RedComponent { get; }
 
-    public string BlueHexComponent { get; }
+    public byte GreenComponent { get; }
 
-    public string AlphaHexComponent { get; }
+    public byte BlueComponent { get; }
 
-    public string Value { get; }
+    public byte AlphaComponent { get; }
+
+    public string Value => $"#{RedComponent}{GreenComponent}{BlueComponent}{AlphaComponent}";
 
     private HexColorCode(string hexColorCode)
     {
-        Value = hexColorCode;
-
-        if (Value.Length == 4)
+        var components = hexColorCode.Substring(1);
+        if (components.Length is 3 or 4)
         {
-            RedHexComponent = Value[1].ToString();
-            GreenHexComponent = Value[2].ToString();
-            BlueHexComponent = Value[3].ToString();
-            AlphaHexComponent = "";
+            RedComponent = byte.Parse(components[0].ToString(), System.Globalization.NumberStyles.HexNumber);
+            GreenComponent = byte.Parse(components[1].ToString(), System.Globalization.NumberStyles.HexNumber);
+            BlueComponent = byte.Parse(components[2].ToString(), System.Globalization.NumberStyles.HexNumber);
+            AlphaComponent = components.Length is 4
+                ? byte.Parse(components[3].ToString(), System.Globalization.NumberStyles.HexNumber)
+                : (byte)255;
         }
-        else if (Value.Length == 5)
+        else if (components.Length is 6 or 8)
         {
-            RedHexComponent = Value[1].ToString();
-            GreenHexComponent = Value[2].ToString();
-            BlueHexComponent = Value[3].ToString();
-            AlphaHexComponent = Value[4].ToString();
-        }
-        else if (Value.Length == 7)
-        {
-            RedHexComponent = Value[1..3];
-            GreenHexComponent = Value[3..5];
-            BlueHexComponent = Value[5..7];
-            AlphaHexComponent = "";
-        }
-        else
-        {
-            RedHexComponent = Value[1..3];
-            GreenHexComponent = Value[3..5];
-            BlueHexComponent = Value[5..7];
-            AlphaHexComponent = Value[7..9];
+            RedComponent = byte.Parse(components[0..2], System.Globalization.NumberStyles.HexNumber);
+            GreenComponent = byte.Parse(components[2..4], System.Globalization.NumberStyles.HexNumber);
+            BlueComponent = byte.Parse(components[4..6], System.Globalization.NumberStyles.HexNumber);
+            AlphaComponent = components.Length is 8
+                ? byte.Parse(components[6..8], System.Globalization.NumberStyles.HexNumber)
+                : (byte)255;
         }
     }
 
-    public HexColorCode(string redComponentHex, string greenComponentHex, string blueComponentHex, string alphaComponentHex = "")
-        => (RedHexComponent, GreenHexComponent, BlueHexComponent, AlphaHexComponent, Value) = (redComponentHex, greenComponentHex, blueComponentHex, alphaComponentHex, $"#{redComponentHex}{greenComponentHex}{blueComponentHex}{alphaComponentHex}");
+    private HexColorCode(byte red, byte green, byte blue, byte alpha)
+        => (RedComponent, GreenComponent, BlueComponent, AlphaComponent) = (red, green, blue, alpha);
 
     public static implicit operator HexColorCode(string hexColorCode)
         => VALID_HEX_CRITERIA.IsMatch(hexColorCode)
             ? new HexColorCode(hexColorCode)
             : throw new InvalidHexColorCodeException(hexColorCode);
 
+    public static implicit operator HexColorCode((byte red, byte green, byte blue, byte alpha) hexColorCode)
+        => new(hexColorCode.red, hexColorCode.green, hexColorCode.blue, hexColorCode.alpha);
+
     public static explicit operator HexColorCode(RGB rgb)
-        => $"#{rgb.RedComponent:X2}{rgb.GreenComponent:X2}{rgb.BlueComponent:X2}";
+        => $"#{rgb.RedComponent.ToString($"{Format}2")}#{rgb.GreenComponent.ToString($"{Format}2")}#{rgb.BlueComponent.ToString($"{Format}2")}";
 
     public static explicit operator HexColorCode(RGBA rgba)
-        => $"#{rgba.RedComponent:X2}{rgba.GreenComponent:X2}{rgba.BlueComponent:X2}{rgba.AlphaComponent:X2}";
+        => $"#{rgba.RedComponent.ToString($"{Format}2")}#{rgba.GreenComponent.ToString($"{Format}2")}#{rgba.BlueComponent.ToString($"{Format}2")}#{rgba.AlphaComponent.ToString($"{Format}2")}";
 
     public override string ToString()
-        => $"#{RedHexComponent}{GreenHexComponent}{BlueHexComponent}{AlphaHexComponent}";
+        => Value;
 }

@@ -5,8 +5,7 @@ namespace ScalarKit;
 
 public readonly record struct PhoneNumber : IScalar<PhoneNumber, string>, IFormattable
 {
-    private static readonly Regex VALID_CRITERIA
-        = new Regex(@"^(\+\d{1,3}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$");
+    private static readonly Regex VALID_CRITERIA = new Regex(@"^(\+\d{1,3}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$");
 
     public int CountryCode { get; }
 
