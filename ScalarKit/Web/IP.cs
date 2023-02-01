@@ -11,10 +11,8 @@ public readonly record struct IP : IScalar<IP, string>
 
     public static implicit operator IP(string ip)
     {
-        try { return (IPV4)ip; }
-            catch (Exception) { }
-        try { return (IPV6)ip; }
-            catch (Exception) { }
+        try { return (IPV4)ip; } catch { }
+        try { return (IPV6)ip; } catch { }
 
         throw new InvalidIPException(ip);
     }
