@@ -6,7 +6,7 @@ public interface IScalar<TSelf, TPrimitive>
 {
     TPrimitive Value { get; }
 
-    static abstract implicit operator TSelf(TPrimitive primitive);
+    abstract static implicit operator TSelf(TPrimitive primitive);
 
     string? ToString()
         => Value.ToString();
