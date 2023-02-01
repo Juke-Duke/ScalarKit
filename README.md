@@ -96,7 +96,7 @@ proneUser.Dispatch(
     onError: errors => Console.WriteLine($"User is invalid, there are {user.Errors.Count} errors!")
 );
 ```
-Both `Inspect` and `Dispatch` offer asyncronous variants as well, `InspectAsync`, `DispatchSingleAsync` and `DispatchAsync`.
+Both `Inspect` and `Dispatch` offer asynchronous variants as well, `InspectAsync`, `DispatchSingleAsync` and `DispatchAsync`.
 
 ### Built in inspection methods
 ScalarKit also offers a few built in fluent inspection methods for common validation checks on primitives:
