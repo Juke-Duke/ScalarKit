@@ -22,7 +22,7 @@ public readonly record struct EmailAddress : IScalar<EmailAddress, string>
     public static implicit operator EmailAddress(string emailAddress)
         => MailAddress.TryCreate(emailAddress, out _)
             ? new EmailAddress(emailAddress)
-            : throw new InvalidEmailException(emailAddress);
+            : throw new InvalidEmailAddressException(emailAddress);
 
     public static implicit operator string(EmailAddress emailAddress)
         => emailAddress.Value;
