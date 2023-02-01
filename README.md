@@ -37,9 +37,9 @@ ErrorProne<int, Error> proneInteger = 420;
 proneInteger.Errors; // List of Error objects
 ```
 Both ways allow you to create an `ErrorProne` from:
-- A value
-- A starting error
-- A list of errors
+- A starting value.
+- A starting error.
+- A list of errors.
 ```cs
 ErrorProne<int> proneInteger = 69;
 
@@ -51,7 +51,7 @@ ErrorProne<int> proneIntegerWithErrors = new(new[]
     new ArgumentOutOfRangeException("Try a smaller number")
 });
 ```
-> **Note** The value or error type will be implicitly converted to the `ErrorProne` type, however, any `IEnumerable` of errors can only be passed in through the constructor. This is due to interfaces not being able to be implicitly convert to a type.
+> **Note** The value or error type will be implicitly converted to the `ErrorProne` type, however, any `IEnumerable` of errors can only be passed in through the constructor. This is due to interfaces not being able to implicitly convert to a type.
 
 ### Using an ErrorProne
 The method you will use often is `Inspect`, as this is how ErrorPrones build up their container of errors with a very fluent syntax.
