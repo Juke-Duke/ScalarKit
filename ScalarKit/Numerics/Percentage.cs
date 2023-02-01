@@ -43,19 +43,6 @@ public readonly partial record struct Percentage : IScalar<Percentage, double>, 
         throw new ArgumentException($"{nameof(value)} must be of type {nameof(Percentage)} to be compared.");
     }
 
-    public override string ToString()
-        => $"{Value * 100} %";
-
-    public string ToString(string? format, IFormatProvider? formatProvider)
-    {
-        if (format is null)
-            return ToString();
-        if (format.StartsWith("P"))
-            return $"{Value.ToString(format, formatProvider)}";
-
-        throw new FormatException($"Only 'P' format is supported.");
-    }
-
     public static Percentage Parse(string percentString, IFormatProvider? provider)
         => (Percentage)percentString / 100;
 
@@ -85,8 +72,21 @@ public readonly partial record struct Percentage : IScalar<Percentage, double>, 
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, [MaybeNullWhen(false)] out Percentage result)
         => TryParse(s.ToString(), provider, out result);
 
+    public override string ToString()
+        => $"{Value * 100} %";
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        if (format is null)
+            return ToString();
+        if (format.StartsWith("P"))
+            return $"{Value.ToString(format, formatProvider)}";
+
+        throw new FormatException($"Only 'P' format is supported.");
+    }
+
     public static Percentage operator +(Percentage left, Percentage right)
-    => left.Value + right.Value;
+        => left.Value + right.Value;
 
     public static Percentage operator -(Percentage left, Percentage right)
         => left.Value - right.Value > 0
