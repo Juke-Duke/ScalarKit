@@ -10,7 +10,7 @@ public readonly record struct Degree : IScalar<Degree, double>, IAdditionOperato
         => Value = degree;
 
     public static implicit operator Degree(double degree)
-        => 0 <= degree
+        => degree >= 0
             ? new Degree(degree % 360)
             : throw new OverflowException($"{nameof(Degree)} value must be positive.");
 
