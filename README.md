@@ -1,5 +1,8 @@
 ![ScalarKit](ScalarKit.png)
 
+<h1><center>Feel free to contribute!!!</center></h1>
+<center>This library is constantly being developed and new scalars are being added continuosly.</center><br>
+
 # Getting Started
 
 ## `IScalar<TSelf, TPrimitive>`
@@ -52,6 +55,13 @@ ErrorProne<int> proneIntegerWithErrors = new(new[]
 });
 ```
 > **Note** The value or error type will be implicitly converted to the `ErrorProne` type, however, any `IEnumerable` of errors can only be passed in through the constructor. This is due to interfaces not being able to implicitly convert to a type.
+
+When using ScalarKits built in exception `ErrorProne`,
+instantiations that will throw an exception will instead add the exception to the list of errors:
+```cs
+ErrorProne<byte> proneByte = 256; // Will usually throw an exception during runtime, but will instead add the exception to the Errors property.
+proneByte.IsFaulty; // True
+```
 
 ### Using an ErrorProne
 The method you will use often is `Inspect`, as this is how ErrorPrones build up their container of errors with a very fluent syntax.

@@ -14,7 +14,7 @@ public class ErrorProne<TValue, TError> : IErroneous<TError>, IScalar<ErrorProne
         ? throw new FaultyValueException(_value)
         : _value;
 
-    public IReadOnlyCollection<TError> Errors => _errors;
+    public IReadOnlyCollection<TError> Errors => _errors.AsReadOnly();
 
     public bool IsFaulty => _errors.Any() || _value is null;
 
@@ -125,7 +125,10 @@ public sealed class ErrorProne<TValue> : ErrorProne<TValue, Exception>, IErroneo
         : base(errors) { }
 
     public static implicit operator ErrorProne<TValue>(TValue value)
-        => new(value);
+    {
+        try { return new(value); }
+            catch (Exception error) { return new(error); }
+    }
 
     public static implicit operator ErrorProne<TValue>(Exception error)
         => new(error);
