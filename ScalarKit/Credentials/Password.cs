@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
@@ -27,7 +26,7 @@ public sealed record Password : IScalar<Password, string>
     public static implicit operator Password(string password)
         => VALID_CRITERIA.IsMatch(password)
             ? new Password(password)
-            : throw new InvalidPasswordException(VALID_CRITERIA_DETAILS);
+            : throw new FormatException($"{nameof(Password)} must meet the following criteria:{Environment.NewLine}{VALID_CRITERIA_DETAILS}");
 
     public static Password Encrypt(Password password)
     {

@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit.Credentials;
 
@@ -15,5 +14,5 @@ public readonly record struct AccountNumber : IScalar<AccountNumber, string>
     public static implicit operator AccountNumber(string accountNumber)
         => VALID_CRITERIA.IsMatch(accountNumber)
             ? new AccountNumber(accountNumber)
-            : throw new InvalidAccountNumberException(accountNumber);
+            : throw new FormatException($"{nameof(AccountNumber)} must be between 5 and 17 characters long and can only contain letters and numbers.");
 }

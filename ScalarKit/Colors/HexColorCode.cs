@@ -17,9 +17,9 @@ public readonly record struct HexColorCode : IScalar<HexColorCode, string>
 
     public byte BlueComponent { get; }
 
-    public byte AlphaComponent { get; }
+    public byte Alpha { get; }
 
-    public string Value => $"#{RedComponent.ToString(Format)}{GreenComponent.ToString(Format)}{BlueComponent.ToString(Format)}{AlphaComponent.ToString(Format)}";
+    public string Value => $"#{RedComponent.ToString(Format)}{GreenComponent.ToString(Format)}{BlueComponent.ToString(Format)}{Alpha.ToString(Format)}";
 
     private HexColorCode(string hexColorCode)
     {
@@ -29,7 +29,7 @@ public readonly record struct HexColorCode : IScalar<HexColorCode, string>
             RedComponent = byte.Parse(components[0].ToString(), System.Globalization.NumberStyles.HexNumber);
             GreenComponent = byte.Parse(components[1].ToString(), System.Globalization.NumberStyles.HexNumber);
             BlueComponent = byte.Parse(components[2].ToString(), System.Globalization.NumberStyles.HexNumber);
-            AlphaComponent = components.Length is 4
+            Alpha = components.Length is 4
                 ? byte.Parse(components[3].ToString(), System.Globalization.NumberStyles.HexNumber)
                 : (byte)255;
         }
@@ -38,19 +38,19 @@ public readonly record struct HexColorCode : IScalar<HexColorCode, string>
             RedComponent = byte.Parse(components[0..2], System.Globalization.NumberStyles.HexNumber);
             GreenComponent = byte.Parse(components[2..4], System.Globalization.NumberStyles.HexNumber);
             BlueComponent = byte.Parse(components[4..6], System.Globalization.NumberStyles.HexNumber);
-            AlphaComponent = components.Length is 8
+            Alpha = components.Length is 8
                 ? byte.Parse(components[6..8], System.Globalization.NumberStyles.HexNumber)
                 : (byte)255;
         }
     }
 
     private HexColorCode(byte red, byte green, byte blue, byte alpha)
-        => (RedComponent, GreenComponent, BlueComponent, AlphaComponent) = (red, green, blue, alpha);
+        => (RedComponent, GreenComponent, BlueComponent, Alpha) = (red, green, blue, alpha);
 
     public static implicit operator HexColorCode(string hexColorCode)
         => VALID_HEX_CRITERIA.IsMatch(hexColorCode)
             ? new HexColorCode(hexColorCode)
-            : throw new InvalidHexColorCodeException(hexColorCode);
+            : throw new FormatException($"{nameof(HexColorCode)} must be in the format of one of '#RGB', '#RGBA', '#RRGGBB', or '#RRGGBBAA'");
 
     public static implicit operator HexColorCode((byte red, byte green, byte blue, byte alpha) hexColorCode)
         => new(hexColorCode.red, hexColorCode.green, hexColorCode.blue, hexColorCode.alpha);
@@ -59,7 +59,16 @@ public readonly record struct HexColorCode : IScalar<HexColorCode, string>
         => $"#{rgb.RedComponent:X2}{rgb.GreenComponent:X2}{rgb.BlueComponent:X2}";
 
     public static explicit operator HexColorCode(RGBA rgba)
-        => $"#{rgba.RedComponent:X2}{rgba.GreenComponent:X2}{rgba.BlueComponent:X2}{rgba.AlphaComponent:X2}";
+        => $"#{rgba.RedComponent:X2}{rgba.GreenComponent:X2}{rgba.BlueComponent:X2}{rgba.Alpha:X2}";
+
+    public static explicit operator HexColorCode(HSL hsl)
+        => (HexColorCode)(RGB)hsl;
+
+    public static explicit operator HexColorCode(HSLA hsla)
+        => (HexColorCode)(RGBA)hsla;
+
+    public void Deconstruct(out byte red, out byte green, out byte blue, out byte alpha)
+        => (red, green, blue, alpha) = (RedComponent, GreenComponent, BlueComponent, Alpha);
 
     public override string ToString()
         => Value;

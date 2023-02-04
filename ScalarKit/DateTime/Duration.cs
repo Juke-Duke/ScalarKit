@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
@@ -29,5 +28,5 @@ public readonly record struct Duration : IScalar<Duration, string>
     public static implicit operator Duration(string duration)
         => VALID_CRITERIA.IsMatch(duration)
             ? new Duration(duration)
-            : throw new InvalidDurationException(duration);
+            : throw new FormatException($"{nameof(Duration)} value must be in the format 'P000Y000M000DT000H000M000S'.");
 }

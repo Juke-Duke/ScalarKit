@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
@@ -29,7 +28,7 @@ public readonly record struct PhoneNumber : IScalar<PhoneNumber, string>, IForma
     public static implicit operator PhoneNumber(string phoneNumber)
         => VALID_CRITERIA.IsMatch(phoneNumber)
             ? new PhoneNumber(phoneNumber.Where(x => char.IsDigit(x)).ToArray())
-            : throw new InvalidPhoneNumberException(phoneNumber);
+            : throw new FormatException($"{nameof(PhoneNumber)} value must be a valid phone number.");
 
     public override string ToString()
         => ToString("E164", null);

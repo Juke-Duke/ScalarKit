@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
@@ -17,5 +16,5 @@ public readonly record struct CountryCode : IScalar<CountryCode, string>
     public static implicit operator CountryCode(string countryCode)
         => VALID_COUNTRY_CODES.IsMatch(countryCode)
             ? new CountryCode(countryCode)
-            : throw new InvalidCountryCodeException(countryCode);
+            : throw new FormatException($"{nameof(CountryCode)} must be a valid ISO 3166-1 alpha-2 country code.");
 }

@@ -1,5 +1,4 @@
 using System.Net.Mail;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
@@ -22,7 +21,7 @@ public readonly record struct EmailAddress : IScalar<EmailAddress, string>
     public static implicit operator EmailAddress(string emailAddress)
         => MailAddress.TryCreate(emailAddress, out _)
             ? new EmailAddress(emailAddress)
-            : throw new InvalidEmailAddressException(emailAddress);
+            : throw new FormatException($"{nameof(EmailAddress)} must be a valid email address.");
 
     public static implicit operator string(EmailAddress emailAddress)
         => emailAddress.Value;

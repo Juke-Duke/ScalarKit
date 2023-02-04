@@ -12,7 +12,7 @@ public readonly record struct Degree : IScalar<Degree, double>, IAdditionOperato
     public static implicit operator Degree(double degree)
         => degree >= 0
             ? new Degree(degree % 360)
-            : throw new OverflowException($"{nameof(Degree)} value must be positive.");
+            : throw new OverflowException($"{nameof(Degree)} value must be in range 0° to 360°.");
 
     public static explicit operator Degree(string degree)
         => double.TryParse(degree.TrimEnd(new char[] { '°', ' ' }), out var value)

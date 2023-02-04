@@ -127,7 +127,7 @@ public sealed class ErrorProne<TValue> : ErrorProne<TValue, Exception>, IErroneo
     public static implicit operator ErrorProne<TValue>(TValue value)
     {
         try { return new(value); }
-            catch (Exception error) { return new(error); }
+        catch (Exception error) { return new(error); }
     }
 
     public static implicit operator ErrorProne<TValue>(Exception error)

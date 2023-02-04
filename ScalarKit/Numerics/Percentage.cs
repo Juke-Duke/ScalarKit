@@ -22,7 +22,7 @@ public readonly partial record struct Percentage : IScalar<Percentage, double>, 
     public static explicit operator Percentage(string percent)
         => double.TryParse(percent.TrimEnd(new char[] { '%', ' ' }), out var value)
             ? value / 100
-            : throw new FormatException($"{nameof(Percentage)} value must be in the format '{{number}}%'.");
+            : throw new FormatException($"{nameof(Percentage)} value must be in the format '000%'.");
 
     public int CompareTo(Percentage value)
     {

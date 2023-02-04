@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
@@ -17,5 +16,5 @@ public readonly record struct Currency : IScalar<Currency, string>
     public static implicit operator Currency(string currency)
         => VALID_CURRENCIES.IsMatch(currency)
             ? new Currency(currency)
-            : throw new InvalidCurrencyException(currency);
+            : throw new FormatException($"{nameof(Currency)} value must be a valid ISO 4217 currency code.");
 }

@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using ScalarKit.Exceptions;
 
 namespace ScalarKit;
 
@@ -20,5 +19,5 @@ public sealed record Username : IScalar<Username, string>
     public static implicit operator Username(string username)
         => VALID_CRITERIA.IsMatch(username)
             ? new Username(username)
-            : throw new InvalidUsernameException(username, VALID_CRITERIA_DETAILS);
+            : throw new FormatException($"{nameof(Username)} must meet the following criteria:{Environment.NewLine}{VALID_CRITERIA_DETAILS}");
 }
