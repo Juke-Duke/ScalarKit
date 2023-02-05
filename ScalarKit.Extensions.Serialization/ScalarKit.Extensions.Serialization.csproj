@@ -12,6 +12,7 @@
 
     <PropertyGroup>
     <PackageId>ScalarKit.Extensions.Serialization</PackageId>
+    <PackageIconUrl>https://raw.githubusercontent.com/Juke-Duke/ScalarKit/dev/ScalarKitLogo.png</PackageIconUrl>
     <Version>1.0.0-beta</Version>
     <Authors>Youssef Elshabasy</Authors>
     <Description>Serializer extensions for ScalarKit.</Description>
