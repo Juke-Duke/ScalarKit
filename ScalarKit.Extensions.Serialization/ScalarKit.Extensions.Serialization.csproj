@@ -10,4 +10,13 @@
     <ProjectReference Include="..\ScalarKit\ScalarKit.csproj" />
   </ItemGroup>
 
+    <PropertyGroup>
+    <PackageId>ScalarKit.Extensions.Serialization</PackageId>
+    <Version>1.0.0-beta</Version>
+    <Authors>Youssef Elshabasy</Authors>
+    <Description>Serializer extensions for ScalarKit.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Juke-Duke/ScalarKit</RepositoryUrl>
+  </PropertyGroup>
+
 </Project>
