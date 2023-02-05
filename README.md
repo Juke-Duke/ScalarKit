@@ -1,4 +1,4 @@
-![ScalarKit](ScalarKit.png)
+![ScalarKit](https://raw.githubusercontent.com/Juke-Duke/ScalarKit/dev/ScalarKit.png)
 
 <h1><center>Feel free to contribute!!!</center></h1>
 <center>This library is constantly being developed and new scalars are being added continuosly.</center><br>
