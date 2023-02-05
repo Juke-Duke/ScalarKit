@@ -18,7 +18,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Juke-Duke/ScalarKit</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Tags>scalars;primitive-obsession;railway-oriented-programming</Tags>
+    <PackageTags>scalars;primitive-obsession;railway-oriented-programming</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
