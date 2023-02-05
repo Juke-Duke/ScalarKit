@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -10,7 +11,7 @@
     <PackageId>ScalarKit</PackageId>
     <Version>1.0.0-beta</Version>
     <Authors>Youssef Elshabasy</Authors>
-    <Description>ScalarKit provides a set of basic scalar types to use in your projects, as well as a way to make your own!</Description>
+    <Description>ScalarKit aims to combat primitive obsession with a more declarative approach to create custom scalar properties with primitive backing and validation constraints.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Juke-Duke/ScalarKit</RepositoryUrl>
   </PropertyGroup>
