@@ -7,4 +7,23 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>ScalarKit</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageIcon>ScalarKitLogo.png</PackageIcon>
+    <Authors>Youssef Elshabasy</Authors>
+    <Description>
+      ScalarKit aims to combat primitive obsession with a more declarative approach to create custom scalar properties with primitive backing and validation constraints.
+    </Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Juke-Duke/ScalarKit</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Tags>scalars;primitive-obsession;railway-oriented-programming</Tags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\ScalarKitLogo.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
 </Project>
