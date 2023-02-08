@@ -16,6 +16,8 @@ public interface IScalar<TSelf, TPrimitive>
 
     static abstract implicit operator TSelf(TPrimitive primitive);
 
+    static abstract bool TryFrom(TPrimitive primitive, out TSelf scalar);
+
     string? ToString()
         => Value.ToString();
 }
