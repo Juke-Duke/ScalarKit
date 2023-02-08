@@ -10,4 +10,9 @@
     <ProjectReference Include="..\ScalarKit\ScalarKit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.0.0-rc.6" />
+    <PackageReference Include="HotChocolate.Types.Scalars" Version="13.0.0-rc.6" />
+  </ItemGroup>
+
 </Project>
