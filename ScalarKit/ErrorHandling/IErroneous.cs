@@ -1,9 +1,9 @@
 namespace ScalarKit.ErrorHandling;
 
 public interface IErroneous<TError>
-    where TError : notnull
+	where TError : notnull
 {
-    bool IsFaulty { get; }
+	bool IsFaulty { get; }
 
-    IReadOnlyCollection<TError> Errors { get; }
+	IReadOnlyCollection<TError> Errors { get; }
 }

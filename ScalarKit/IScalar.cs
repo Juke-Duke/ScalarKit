@@ -1,13 +1,14 @@
 namespace ScalarKit;
 
 public interface IScalar<TSelf, TPrimitive>
-    where TSelf : notnull, IScalar<TSelf, TPrimitive>
-    where TPrimitive : notnull
+	where TSelf : notnull, IScalar<TSelf, TPrimitive>
+	where TPrimitive : notnull
 {
-    TPrimitive Value { get; }
+	TPrimitive Value { get; }
 
-    abstract static implicit operator TSelf(TPrimitive primitive);
+	static abstract implicit operator TSelf(TPrimitive primitive);
 
-    string? ToString()
-        => Value.ToString();
+	static abstract bool TryFrom(TPrimitive primitive, out TSelf scalar);
+
+	string ToString();
 }

@@ -4,61 +4,67 @@ namespace ScalarKit;
 
 public readonly record struct HSLA : IScalar<HSLA, string>
 {
-    private static readonly Regex VALID_CRITERIA = new Regex(@"^hsla\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)\s*\)$");
+	private static readonly Regex VALID_CRITERIA = new(
+		@"^hsla\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)\s*\)$"
+	);
 
-    public Degree Hue { get; }
+	private HSLA(string hsla)
+	{
+		string[] components = hsla.Split('(', ')', ',');
 
-    public Percentage Saturation { get; }
+		Hue = double.Parse(components[1]);
 
-    public Percentage Luminance { get; }
+		Saturation = (Percentage)components[2];
 
-    public Percentage Alpha { get; }
+		Luminance = (Percentage)components[3];
 
-    public string Value => $"hsla({Hue.ToString().TrimEnd('°')}, {Saturation}, {Luminance}, {Alpha})";
+		Alpha = (Percentage)components[4];
+	}
 
-    private HSLA(string hsla)
-    {
-        var components = hsla.Split('(', ')', ',');
+	private HSLA(Degree hue, Percentage saturation, Percentage lightness, Percentage alpha)
+		=> (Hue, Saturation, Luminance, Alpha) = (hue, saturation, lightness, alpha);
 
-        Hue = double.Parse(components[1]);
+	public Degree Hue { get; }
 
-        Saturation = (Percentage)components[2];
+	public Percentage Saturation { get; }
 
-        Luminance = (Percentage)components[3];
+	public Percentage Luminance { get; }
 
-        Alpha = (Percentage)components[4];
-    }
+	public Percentage Alpha { get; }
 
-    private HSLA(Degree hue, Percentage saturation, Percentage lightness, Percentage alpha)
-        => (Hue, Saturation, Luminance, Alpha) = (hue, saturation, lightness, alpha);
+	public string Value => $"hsla({Hue.ToString().TrimEnd('°')}, {Saturation}, {Luminance}, {Alpha})";
 
-    public static implicit operator HSLA(string hsla)
-        => VALID_CRITERIA.IsMatch(hsla)
-            ? new HSLA(hsla)
-            : throw new FormatException($"{nameof(HSLA)} value must be in the format 'hsla(000, 00%, 00%, 00%)'.");
+	public static implicit operator HSLA(string hsla)
+		=> VALID_CRITERIA.IsMatch(hsla)
+			? new HSLA(hsla)
+			: throw new FormatException($"{nameof(HSLA)} value must be in the format 'hsla(000, 00%, 00%, 00%)'.");
 
-    public static implicit operator HSLA((Degree hue, Percentage saturation, Percentage lightness, Percentage alpha) hsla)
-        => new HSLA(hsla.hue, hsla.saturation, hsla.lightness, hsla.alpha);
+	public override string ToString()
+		=> Value;
 
-    public static explicit operator HSLA(HexColorCode hexColorCode)
-        => (HSLA)(RGBA)hexColorCode;
+	public static bool TryFrom(string primitive, out HSLA scalar) => throw new NotImplementedException();
 
-    public static explicit operator HSLA(RGB rgb)
-        => (HSLA)(HSL)rgb;
+	public static implicit operator HSLA(
+		(Degree hue, Percentage saturation, Percentage lightness, Percentage alpha) hsla
+	)
+		=> new(hsla.hue, hsla.saturation, hsla.lightness, hsla.alpha);
 
-    public static explicit operator HSLA(RGBA rgba)
-    {
-        var (hue, saturation, luminance) = (HSL)rgba;
+	public static explicit operator HSLA(HexColorCode hexColorCode)
+		=> (HSLA)(RGBA)hexColorCode;
 
-        return new(hue, saturation, luminance, rgba.Alpha);
-    }
+	public static explicit operator HSLA(RGB rgb)
+		=> (HSLA)(HSL)rgb;
 
-    public static explicit operator HSLA(HSL hsl)
-        => new(hsl.Hue, hsl.Saturation, hsl.Luminance, (Percentage)"100%");
+	public static explicit operator HSLA(RGBA rgba)
+	{
+		(Degree hue, Percentage saturation, Percentage luminance) = (HSL)rgba;
 
-    public void Deconstruct(out Degree hue, out Percentage saturation, out Percentage lightness, out Percentage alpha)
-        => (hue, saturation, lightness, alpha) = (Hue, Saturation, Luminance, Alpha);
+		return new HSLA(hue, saturation, luminance, rgba.Alpha);
+	}
 
-    public override string ToString()
-        => Value;
+	public static explicit operator HSLA(HSL hsl)
+		=> new(hsl.Hue, hsl.Saturation, hsl.Luminance, (Percentage)"100%");
+
+	public void Deconstruct(out Degree hue, out Percentage saturation, out Percentage lightness, out Percentage alpha)
+		=> (hue, saturation, lightness, alpha) = (Hue, Saturation, Luminance, Alpha);
 }

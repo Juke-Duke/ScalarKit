@@ -4,18 +4,20 @@ namespace ScalarKit;
 
 public sealed record JSON : IScalar<JSON, string>
 {
-    public string Value { get; }
+	private JSON(string json)
+		=> Value = json;
 
-    private JSON(string json)
-        => Value = json;
+	public string Value { get; }
 
-    public static implicit operator JSON(string json)
-    {
-        JsonDocument.Parse(json);
+	public static implicit operator JSON(string json)
+	{
+		JsonDocument.Parse(json);
 
-        return new JSON(json);
-    }
+		return new JSON(json);
+	}
 
-    public override string ToString()
-        => Value;
+	public override string ToString()
+		=> Value;
+
+	public static bool TryFrom(string primitive, out JSON scalar) => throw new NotImplementedException();
 }

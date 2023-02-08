@@ -4,80 +4,83 @@ namespace ScalarKit;
 
 public readonly record struct HSL : IScalar<HSL, string>
 {
-    private static readonly Regex VALID_CRITERIA = new Regex(@"^hsl\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*\)$");
+	private static readonly Regex VALID_CRITERIA =
+		new(@"^hsl\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*\)$");
 
-    public Degree Hue { get; }
+	private HSL(string hsl)
+	{
+		string[] components = hsl.Split('(', ')', ',');
 
-    public Percentage Saturation { get; }
+		Hue = double.Parse(components[1]);
 
-    public Percentage Luminance { get; }
+		Saturation = (Percentage)components[2];
 
-    public string Value => $"hsl({Hue.ToString().TrimEnd('°')}, {Saturation}, {Luminance})";
+		Luminance = (Percentage)components[3];
+	}
 
-    private HSL(string hsl)
-    {
-        var components = hsl.Split('(', ')', ',');
+	private HSL(Degree hue, Percentage saturation, Percentage lightness)
+		=> (Hue, Saturation, Luminance) = (hue, saturation, lightness);
 
-        Hue = double.Parse(components[1]);
+	public Degree Hue { get; }
 
-        Saturation = (Percentage)components[2];
+	public Percentage Saturation { get; }
 
-        Luminance = (Percentage)components[3];
-    }
+	public Percentage Luminance { get; }
 
-    private HSL(Degree hue, Percentage saturation, Percentage lightness)
-        => (Hue, Saturation, Luminance) = (hue, saturation, lightness);
+	public string Value => $"hsl({Hue.ToString().TrimEnd('°')}, {Saturation}, {Luminance})";
 
-    public static implicit operator HSL(string hsl)
-        => VALID_CRITERIA.IsMatch(hsl)
-            ? new HSL(hsl)
-            : throw new FormatException($"{nameof(HSL)} value must be in the format 'hsl(000, 00%, 00%)'.");
+	public static implicit operator HSL(string hsl)
+		=> VALID_CRITERIA.IsMatch(hsl)
+			? new HSL(hsl)
+			: throw new FormatException($"{nameof(HSL)} value must be in the format 'hsl(000, 00%, 00%)'.");
 
-    public static implicit operator HSL((Degree hue, Percentage saturation, Percentage lightness) hsl)
-        => new(hsl.hue, hsl.saturation, hsl.lightness);
+	public override string ToString()
+		=> Value;
 
-    public static explicit operator HSL(HexColorCode hexColorCode)
-        => (HSL)(RGB)hexColorCode;
+	public static bool TryFrom(string primitive, out HSL scalar) => throw new NotImplementedException();
 
-    public static explicit operator HSL(RGB rgb)
-    {
-        var redComponent = rgb.RedComponent / 255.0;
-        var greenComponent = rgb.GreenComponent / 255.0;
-        var blueComponent = rgb.BlueComponent / 255.0;
+	public static implicit operator HSL((Degree hue, Percentage saturation, Percentage lightness) hsl)
+		=> new(hsl.hue, hsl.saturation, hsl.lightness);
 
-        var min = Math.Min(Math.Min(redComponent, greenComponent), blueComponent);
-        var max = Math.Max(Math.Max(redComponent, greenComponent), blueComponent);
-        var delta = max - min;
+	public static explicit operator HSL(HexColorCode hexColorCode)
+		=> (HSL)(RGB)hexColorCode;
 
-        Percentage luminance = (max + min) / 2;
-        Degree hue = 0.0;
-        Percentage saturation = 0.0;
+	public static explicit operator HSL(RGB rgb)
+	{
+		double redComponent = rgb.RedComponent / 255.0;
+		double greenComponent = rgb.GreenComponent / 255.0;
+		double blueComponent = rgb.BlueComponent / 255.0;
 
-        if (delta is 0)
-            return new(0, 0, luminance);
+		double min = Math.Min(Math.Min(redComponent, greenComponent), blueComponent);
+		double max = Math.Max(Math.Max(redComponent, greenComponent), blueComponent);
+		double delta = max - min;
 
-        if (redComponent == max)
-            hue = 60 * (((greenComponent - blueComponent) / delta) % 6);
-        else if (greenComponent == max)
-            hue = 60 * (((blueComponent - redComponent) / delta) + 2);
-        else if (blueComponent == max)
-            hue = 60 * (((redComponent - greenComponent) / delta) + 4);
+		Percentage luminance = (max + min) / 2;
+		Degree hue = 0.0;
+		Percentage saturation = 0.0;
 
-        if (delta > 0 || delta < 0)
-            saturation = delta / (1 - Math.Abs(2 * luminance.Value - 1));
+		if (delta is 0)
+			return new HSL(0, 0, luminance);
 
-        return new(hue, saturation, luminance);
-    }
+		if (redComponent == max)
+			hue = 60 * ((greenComponent - blueComponent) / delta % 6);
+		else if (greenComponent == max)
+			hue = 60 * ((blueComponent - redComponent) / delta + 2);
+		else if (blueComponent == max)
+			hue = 60 * ((redComponent - greenComponent) / delta + 4);
 
-    public static explicit operator HSL(RGBA rgba)
-        => (HSL)(RGB)rgba;
+		if (delta > 0 || delta < 0)
+			saturation = delta / (1 - Math.Abs(2 * luminance.Value - 1));
 
-    public static explicit operator HSL(HSLA hsla)
-        => new(hsla.Hue, hsla.Saturation, hsla.Luminance);
+		return new HSL(hue, saturation, luminance);
+	}
 
-    public void Deconstruct(out Degree hue, out Percentage saturation, out Percentage luminance)
-        => (hue, saturation, luminance) = (Hue, Saturation, Luminance);
+	public static explicit operator HSL(RGBA rgba)
+		=> (HSL)(RGB)rgba;
 
-    public override string ToString()
-        => Value;
+	public static explicit operator HSL(HSLA hsla)
+		=> new(hsla.Hue, hsla.Saturation, hsla.Luminance);
+
+	public void Deconstruct(out Degree hue, out Percentage saturation, out Percentage luminance)
+		=> (hue, saturation, luminance) = (Hue, Saturation, Luminance);
 }
