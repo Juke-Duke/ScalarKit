@@ -11,7 +11,7 @@ public readonly record struct HexColorCode : IScalar<HexColorCode, string>
 
 	private HexColorCode(string hexColorCode)
 	{
-		string components = hexColorCode.Substring(1);
+		string components = hexColorCode[1..];
 
 		if (components.Length is 3 or 4)
 		{

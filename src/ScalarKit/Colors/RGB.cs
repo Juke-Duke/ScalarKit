@@ -5,7 +5,7 @@ namespace ScalarKit;
 public readonly record struct RGB : IScalar<RGB, string>
 {
 	private static readonly Regex VALID_CRITERIA = new(
-		@"^rgb\(\s*(-?\d+|-?\d*\.\d+(?=%))(%?)\s*,\s*(-?\d+|-?\d*\.\d+(?=%))(\2)\s*,\s*(-?\d+|-?\d*\.\d+(?=%))(\2)\s*\)$"
+		@"^rgb\(\s*(-?\d+|-?\d*\.\d+(?=%))(%?)\s*,\s*(-?\d+|-?\d*\.\d+(?=%))(\2)\s*,\s*(-?\d+|-?\d*\.\d+(?=%))(\2)\s*\)$", RegexOptions.Compiled
 	);
 
 	private RGB(string rgb)

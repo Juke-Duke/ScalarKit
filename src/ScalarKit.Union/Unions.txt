@@ -1,0 +1,18 @@
+[Union(typof(int), typeof(char))]
+public partial record MyUnion;
+// Union with int and char
+
+[Union]
+public partial record Result<T, E>
+{
+    public partial record Ok(T Value);
+    public partial record Error(E Value);
+}
+// Union with Ok, Err, T, E
+
+[Union]
+public abstract partial record Option<T>
+{
+    public partial record None;
+    public partial record Some(T Value);
+}

@@ -141,7 +141,7 @@ This allows your own custom types to be used in the same way as `ErrorProne`. Sc
 public record AuthenticationResponse(
     string Username,
     string Email,
-    string Password
+    string ssword
 );
 ```
 ```cs

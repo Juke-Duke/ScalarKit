@@ -57,7 +57,7 @@ public sealed record Password : IScalar<Password, string>
 		=> VALID_CRITERIA.IsMatch(password)
 			? new Password(password)
 			: throw new FormatException(
-				$"{nameof(Password)} must meet the following criteria:{Environment.NewLine}{VALID_CRITERIA_DETAILS}"
+				$"{nameof(Password)} must meet the following criteria:\n{VALID_CRITERIA_DETAILS}"
 			);
 
 	/// <summary>
@@ -87,7 +87,7 @@ public sealed record Password : IScalar<Password, string>
 	}
 
 	/// <summary>
-	///     Returns a <see cref="string" /> that represents the current <see cref="Password" />.
+	///     Returns a <see cref="int" /> that represents the current <see cref="Password" />.
 	/// </summary>
 	/// <returns>A <see cref="string" /> that represents the current <see cref="Password" />.</returns>
 	public override string ToString()

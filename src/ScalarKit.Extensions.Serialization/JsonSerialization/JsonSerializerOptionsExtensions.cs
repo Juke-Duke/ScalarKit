@@ -27,8 +27,10 @@ public static class JsonSerializerOptionsExtensions
 		foreach (Type scalar in scalars)
 		{
 			Type scalarType = scalar;
-			Type primitiveType = scalar.GetInterfaces()
-.First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IScalar<,>)).GetGenericArguments()[1];
+			Type primitiveType = scalar
+				.GetInterfaces()
+				.First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IScalar<,>))
+				.GetGenericArguments()[1];
 
 			Type converterType = typeof(ScalarConverter<,>).MakeGenericType(scalarType, primitiveType);
 

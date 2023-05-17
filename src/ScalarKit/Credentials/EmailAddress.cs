@@ -7,7 +7,7 @@ namespace ScalarKit;
 /// </summary>
 public readonly record struct EmailAddress : IScalar<EmailAddress, string>
 {
-	private static readonly Regex VALID_CRITERIA = new(@"^(?!\.)(?!.*\.\.)[a-zA-Z0-9!#$%&'*+-/=?^_`{|}~\.]{0,63}[^\.]@(?!\-)[a-zA-Z0-9-]+[^\-]\.?[a-zA-Z]{2,255}$");
+	private static readonly Regex VALID_CRITERIA = new(@"^(?!\.)(?!.*\.\.)[a-zA-Z0-9!#$%&'*+-/=?^_`{|}~\.]{0,63}[^.]@(?!\-)[a-zA-Z0-9-]{0,62}[^-]\.(?![0-9]*$)[a-zA-Z0-9]{2,63}$");
 
 	/// <summary>
 	///     Gets the username component of this <see cref="EmailAddress" />.
@@ -57,10 +57,10 @@ public readonly record struct EmailAddress : IScalar<EmailAddress, string>
 	///     <see langword="true" /> if the provided <see cref="string" /> is a valid <see cref="EmailAddress" />;
 	///     otherwise, <see langword="false" />.
 	/// </returns>
-	public static bool TryFrom(string @string, out EmailAddress emailAddress)
+	public static bool TryFrom(string @string, out EmailAddress? emailAddress)
 	{
 		try { emailAddress = @string; return true; }
-		catch { emailAddress = default; return false; }
+		catch { emailAddress = null; return false; }
 	}
 
 	/// <summary>

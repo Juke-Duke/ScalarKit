@@ -43,7 +43,7 @@ public sealed record Username : IScalar<Username, string>
 		=> VALID_CRITERIA.IsMatch(username)
 			? new Username(username)
 			: throw new FormatException(
-				$"{nameof(Username)} must meet the following criteria:{Environment.NewLine}{VALID_CRITERIA_DETAILS}"
+				$"{nameof(Username)} must meet the following criteria:\n{VALID_CRITERIA_DETAILS}"
 			);
 
 	/// <summary>
